@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Parallax Effect for Hero Background Image (disabled to prevent grey areas)
+  // Removed parallax effect to ensure image always covers the hero section
+
   // Back to Top Button
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
@@ -142,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Share Functionality
   const shareButtons = document.querySelectorAll('.share-btn');
   const currentUrl = window.location.href;
-  const shareText = 'In loving memory of Josh Waweru';
+  const shareText = 'In loving memory of Joshua Ngumo Kinyingi';
 
   shareButtons.forEach(btn => {
     btn.addEventListener('click', () => {

@@ -49,6 +49,8 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   background-color: var(--white);
+  margin: 0;
+  padding: 0;
 }
 
 .container {
@@ -67,16 +69,26 @@ body {
 .hero {
   position: relative;
   min-height: 100vh;
-  height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #E8DDD0 0%, #D4C4A8 100%);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   overflow: hidden;
   z-index: 1;
+  padding: 0;
+}
+
+.hero-image-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  min-height: 100vh;
+  transform: none;
 }
 
 .hero-overlay {
@@ -85,61 +97,52 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(250, 248, 243, 0.4);
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.2);
   z-index: 1;
+  pointer-events: none;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-md);
   animation: fadeInUp 1s ease-out;
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
-.hero-image-wrapper {
-  width: 200px;
-  height: 200px;
-  margin: 0 auto var(--spacing-md);
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid var(--white);
-  box-shadow: 0 8px 30px var(--shadow-medium);
-  animation: scaleIn 1s ease-out 0.3s both;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.hero-image-wrapper:hover .hero-image {
-  transform: scale(1.1);
-}
 
 .hero-title {
   font-family: var(--font-serif);
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: var(--spacing-xs);
-  letter-spacing: 1px;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 700;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: 2px;
+  line-height: 1.2;
   animation: fadeInUp 1s ease-out 0.5s both;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5),
+               0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
-  font-size: clamp(1.1rem, 3.5vw, 1.6rem);
-  color: var(--text-medium);
+  font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+  color: var(--white);
   font-weight: 300;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   text-transform: uppercase;
-  margin-bottom: var(--spacing-md);
+  margin: 0;
   animation: fadeInUp 1s ease-out 0.7s both;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5),
+               0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .hero-dates {
@@ -147,25 +150,35 @@ body {
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-xs);
-  color: var(--text-medium);
-  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  color: var(--white);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  margin-top: var(--spacing-sm);
   animation: fadeInUp 1s ease-out 0.9s both;
+  line-height: 1.6;
+  padding-bottom: var(--spacing-md);
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6),
+               0 0 15px rgba(0, 0, 0, 0.4);
 }
 
 .date-label {
-  font-weight: 300;
-  opacity: 0.9;
+  font-weight: 400;
+  opacity: 0.95;
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .date-value {
   font-weight: 600;
-  font-size: 1.1em;
+  font-size: 1.15em;
+  color: var(--white);
 }
 
 .date-separator {
-  margin: var(--spacing-xs) 0;
-  font-size: 1.5em;
+  margin: calc(var(--spacing-xs) / 2) 0;
+  font-size: 1.2em;
   opacity: 0.7;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .scroll-indicator {
@@ -173,17 +186,29 @@ body {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
   animation: bounce 2s infinite;
+  pointer-events: none;
 }
 
 .scroll-arrow {
   width: 30px;
   height: 30px;
-  border-right: 2px solid var(--text-medium);
-  border-bottom: 2px solid var(--text-medium);
+  border-right: 3px solid var(--white);
+  border-bottom: 3px solid var(--white);
   transform: rotate(45deg);
-  opacity: 0.6;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.scroll-arrow {
+  width: 30px;
+  height: 30px;
+  border-right: 3px solid var(--white);
+  border-bottom: 3px solid var(--white);
+  transform: rotate(45deg);
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* Section Styles */
@@ -226,6 +251,7 @@ body {
 .burial-details {
   background: var(--white);
   margin-top: 0;
+  padding-top: var(--spacing-xl);
 }
 
 .details-grid {
@@ -492,31 +518,34 @@ body {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--spacing-md);
   margin-top: var(--spacing-lg);
+  align-items: start;
 }
 
 .gallery-item {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  aspect-ratio: 4/3;
   box-shadow: 0 3px 15px var(--shadow);
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   cursor: pointer;
   border: 1px solid var(--light-brown);
+  background: var(--white);
+  width: 100%;
+  display: block;
 }
 
 .gallery-item:hover {
-  transform: scale(1.03);
-  box-shadow: 0 6px 25px var(--shadow-medium);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px var(--shadow-medium);
 }
 
 .gallery-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  display: block;
   transition: transform var(--transition-slow);
 }
 
@@ -690,39 +719,47 @@ body {
   }
 
   .hero {
-    min-height: auto;
-    height: auto;
-    padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
-    background-attachment: scroll;
-    align-items: flex-start;
-    padding-top: calc(var(--spacing-lg) + env(safe-area-inset-top, 0px));
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .hero-image-bg {
+    height: 100%;
+    min-height: 100vh;
+    object-fit: cover;
+    object-position: center top;
+    transform: none;
+  }
+  
+  .hero-overlay {
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
   }
 
   .hero-content {
-    padding: var(--spacing-sm) var(--spacing-xs);
+    padding: var(--spacing-lg) var(--spacing-md);
     width: 100%;
     max-width: 100%;
-    margin-top: 0;
-  }
-
-  .hero-image-wrapper {
-    width: 150px;
-    height: 150px;
-    margin-bottom: var(--spacing-sm);
-    margin-top: 0;
+    margin: 0 auto;
+    justify-content: center;
+    gap: var(--spacing-md);
   }
 
   .hero-title {
-    margin-bottom: var(--spacing-xs);
+    margin: 0;
+    line-height: 1.2;
   }
 
   .hero-subtitle {
-    margin-bottom: var(--spacing-sm);
-    letter-spacing: 2px;
+    margin: 0;
+    letter-spacing: 3px;
   }
 
   .hero-dates {
-    gap: 0.3rem;
+    gap: 0.4rem;
+    margin-top: var(--spacing-xs);
   }
 
   .section {
@@ -735,7 +772,7 @@ body {
   }
 
   .gallery-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-sm);
   }
 
@@ -780,43 +817,43 @@ body {
 
 @media (max-width: 480px) {
   .hero {
-    min-height: auto;
-    height: auto;
-    padding: var(--spacing-md) var(--spacing-xs) var(--spacing-sm);
-    align-items: flex-start;
-    padding-top: calc(var(--spacing-md) + env(safe-area-inset-top, 0px));
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+    height: 100vh;
+    height: 100dvh;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero-content {
-    padding: var(--spacing-xs);
-    margin-top: 0;
+    padding: var(--spacing-md) var(--spacing-sm);
+    margin: 0 auto;
+    justify-content: center;
+    gap: var(--spacing-xs);
   }
 
-  .hero-image-wrapper {
-    width: 120px;
-    height: 120px;
-    margin-bottom: var(--spacing-xs);
-    margin-top: 0;
-  }
 
   .hero-title {
-    font-size: 2rem;
-    margin-bottom: 0.3rem;
+    font-size: 2.2rem;
+    margin: 0;
+    line-height: 1.2;
   }
 
   .hero-subtitle {
     font-size: 1rem;
-    margin-bottom: var(--spacing-xs);
-    letter-spacing: 1px;
+    margin: 0;
+    letter-spacing: 2px;
   }
 
   .hero-dates {
-    font-size: 0.85rem;
-    gap: 0.25rem;
+    font-size: 0.95rem;
+    gap: 0.3rem;
+    margin-top: var(--spacing-xs);
   }
 
   .scroll-indicator {
-    bottom: 20px;
+    bottom: 15px;
   }
 
   .section-title {
