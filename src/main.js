@@ -99,8 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
           item.style.display = 'block';
           // Stagger the fade-in for smooth effect
           setTimeout(() => {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1) translateY(0)';
             item.style.animation = `fadeInScale 0.5s ease-out ${index * 0.05}s both`;
           }, 50);
         } else {
@@ -108,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => {
             item.classList.add('hidden');
             item.style.display = 'none';
-          }, 300);
+          }, 550);
         }
       });
     });
@@ -122,10 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxNext = document.getElementById('lightboxNext');
   let currentImageIndex = 0;
 
-  function openLightbox(index) {
-    const images = getVisibleImages();
-    currentImageIndex = index;
-    lightboxImage.src = images[index];
+  function openLightbox() {
+    if (!lightboxImage.src) return;
     lightbox?.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -153,7 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const imageSrc = item.dataset.image;
       const index = images.indexOf(imageSrc);
       if (index !== -1) {
-        openLightbox(index);
+        currentImageIndex = index;
+        lightboxImage.src = imageSrc;
+        openLightbox();
       }
     });
   });
