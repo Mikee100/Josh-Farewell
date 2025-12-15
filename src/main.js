@@ -248,5 +248,58 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Friends videos carousel controls
+  const friendsRow = document.querySelector('.friends-video-row');
+  const friendsCards = friendsRow ? friendsRow.querySelectorAll('.video-card') : [];
+  const friendsPrev = document.querySelector('.friends-prev');
+  const friendsNext = document.querySelector('.friends-next');
+  let friendsIndex = 0;
+
+  // Ensure first friends video is active (especially for mobile carousel)
+  if (friendsCards && friendsCards.length) {
+    friendsCards.forEach((card, index) => {
+      if (index === 0) {
+        card.classList.add('is-active');
+      } else {
+        card.classList.remove('is-active');
+      }
+    });
+  }
+
+  function scrollToFriend(index) {
+    if (!friendsRow || !friendsCards.length) return;
+    const maxIndex = friendsCards.length - 1;
+    friendsIndex = Math.max(0, Math.min(index, maxIndex));
+
+    // Update active card (used for mobile view)
+    friendsCards.forEach((card, idx) => {
+      if (idx === friendsIndex) {
+        card.classList.add('is-active');
+      } else {
+        card.classList.remove('is-active');
+      }
+    });
+
+    // On larger screens, smoothly scroll the selected card into view
+    if (window.innerWidth > 768) {
+      const targetCard = friendsCards[friendsIndex];
+      if (targetCard && typeof targetCard.scrollIntoView === 'function') {
+        targetCard.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',
+          block: 'nearest'
+        });
+      }
+    }
+  }
+
+  friendsPrev?.addEventListener('click', () => {
+    scrollToFriend(friendsIndex - 1);
+  });
+
+  friendsNext?.addEventListener('click', () => {
+    scrollToFriend(friendsIndex + 1);
+  });
 });
 
