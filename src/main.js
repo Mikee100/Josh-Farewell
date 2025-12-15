@@ -79,7 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function getVisibleImages() {
     return Array.from(galleryItems)
       .filter(item => !item.classList.contains('hidden'))
-      .map(item => item.dataset.image);
+      .map(item => {
+        const img = item.querySelector('img');
+        return img ? img.src : item.dataset.image;
+      });
   }
   
   filterButtons.forEach(btn => {
@@ -121,7 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentImageIndex = 0;
 
   function openLightbox() {
+    if (!lightboxImage) return;
     if (!lightboxImage.src) return;
+    lightboxImage.style.display = 'block';
     lightbox?.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -146,7 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
   galleryItems.forEach((item) => {
     item.addEventListener('click', () => {
       const images = getVisibleImages();
-      const imageSrc = item.dataset.image;
+      const imgEl = item.querySelector('img');
+      const imageSrc = imgEl ? imgEl.src : item.dataset.image;
       const index = images.indexOf(imageSrc);
       if (index !== -1) {
         currentImageIndex = index;
