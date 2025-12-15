@@ -54,9 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Parallax Effect for Hero Background Image (disabled to prevent grey areas)
-  // Removed parallax effect to ensure image always covers the hero section
-
   // Back to Top Button
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
@@ -74,17 +71,59 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Lightbox for Gallery Images
+  // Gallery Filter Functionality
+  const filterButtons = document.querySelectorAll('.filter-btn');
   const galleryItems = document.querySelectorAll('.gallery-item');
+  
+  // Get all visible images for lightbox
+  function getVisibleImages() {
+    return Array.from(galleryItems)
+      .filter(item => !item.classList.contains('hidden'))
+      .map(item => item.dataset.image);
+  }
+  
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Update active button
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const filter = btn.dataset.filter;
+      
+      // Filter gallery items with smooth transitions
+      galleryItems.forEach((item, index) => {
+        const category = item.dataset.category;
+        
+        if (filter === 'all' || category === filter) {
+          item.classList.remove('hidden', 'fade-out');
+          item.style.display = 'block';
+          // Stagger the fade-in for smooth effect
+          setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1) translateY(0)';
+            item.style.animation = `fadeInScale 0.5s ease-out ${index * 0.05}s both`;
+          }, 50);
+        } else {
+          item.classList.add('fade-out');
+          setTimeout(() => {
+            item.classList.add('hidden');
+            item.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+
+  // Lightbox for Gallery Images
   const lightbox = document.getElementById('lightbox');
   const lightboxImage = document.getElementById('lightboxImage');
   const lightboxClose = document.getElementById('lightboxClose');
   const lightboxPrev = document.getElementById('lightboxPrev');
   const lightboxNext = document.getElementById('lightboxNext');
   let currentImageIndex = 0;
-  const images = Array.from(galleryItems).map(item => item.dataset.image);
 
   function openLightbox(index) {
+    const images = getVisibleImages();
     currentImageIndex = index;
     lightboxImage.src = images[index];
     lightbox?.classList.add('active');
@@ -97,17 +136,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showNextImage() {
+    const images = getVisibleImages();
     currentImageIndex = (currentImageIndex + 1) % images.length;
     lightboxImage.src = images[currentImageIndex];
   }
 
   function showPrevImage() {
+    const images = getVisibleImages();
     currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
     lightboxImage.src = images[currentImageIndex];
   }
 
-  galleryItems.forEach((item, index) => {
-    item.addEventListener('click', () => openLightbox(index));
+  galleryItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const images = getVisibleImages();
+      const imageSrc = item.dataset.image;
+      const index = images.indexOf(imageSrc);
+      if (index !== -1) {
+        openLightbox(index);
+      }
+    });
   });
 
   lightboxClose?.addEventListener('click', closeLightbox);
@@ -150,6 +198,23 @@ document.addEventListener('DOMContentLoaded', () => {
   shareButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const platform = btn.dataset.platform;
+
+      // Use native share dialog when available
+      if (platform === 'native') {
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            text: shareText,
+            url: currentUrl
+          }).catch(() => {
+            // If user cancels or share fails, silently ignore
+          });
+        } else if (navigator.clipboard) {
+          // Fallback: copy link so it can be pasted into any social app
+          navigator.clipboard.writeText(currentUrl);
+        }
+        return;
+      }
 
       if (platform === 'copy') {
         navigator.clipboard.writeText(currentUrl).then(() => {
