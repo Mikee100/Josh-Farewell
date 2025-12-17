@@ -8,6 +8,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets'
+  },
+  optimizeDeps: {
+    exclude: ['react-dom', 'react-router-dom']
   }
 })
 

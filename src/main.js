@@ -1,5 +1,18 @@
+// Import API utilities - always load from API
+import { loadGalleryFromAPI } from './gallery-loader.js';
+
 // Smooth scroll behavior
 document.addEventListener('DOMContentLoaded', () => {
+  // Always load gallery from API first
+  loadGalleryFromAPI().then(() => {
+    // Initialize gallery filters and lightbox after API images are loaded
+    initializeGalleryFilters();
+    initializeLightbox();
+  }).catch(() => {
+    // If API fails, still initialize for empty state
+    initializeGalleryFilters();
+    initializeLightbox();
+  });
   // Smooth scroll for any anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -71,139 +84,181 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Gallery Filter Functionality
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const galleryItems = document.querySelectorAll('.gallery-item');
-  
-  // Ensure all gallery items are visible on page load
-  galleryItems.forEach(item => {
-    item.classList.remove('hidden', 'fade-out');
-    item.style.display = 'block';
-    item.style.opacity = '1';
+  // Initialize gallery filters (can be called multiple times after gallery reloads)
+  function initializeGalleryFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
     
-    // Ensure images load properly
-    const img = item.querySelector('img');
-    if (img) {
-      img.style.display = 'block';
-      img.style.opacity = '1';
-      img.style.visibility = 'visible';
+    // Ensure all gallery items are visible on page load
+    galleryItems.forEach(item => {
+      item.classList.remove('hidden', 'fade-out');
+      item.style.display = 'block';
+      item.style.opacity = '1';
       
-      // Handle image load errors
-      img.addEventListener('error', function() {
-        console.error('Image failed to load:', this.src);
-      });
-      
-      // Force image to load if lazy loading
-      if (img.hasAttribute('loading') && img.getAttribute('loading') === 'lazy') {
-        img.loading = 'eager';
+      // Ensure images load properly
+      const img = item.querySelector('img');
+      if (img) {
+        img.style.display = 'block';
+        img.style.opacity = '1';
+        img.style.visibility = 'visible';
+        
+        // Handle image load errors
+        img.addEventListener('error', function() {
+          console.error('Image failed to load:', this.src);
+        });
+        
+        // Force image to load if lazy loading
+        if (img.hasAttribute('loading') && img.getAttribute('loading') === 'lazy') {
+          img.loading = 'eager';
+        }
       }
-    }
-  });
-  
-  // Get all visible images for lightbox
-  function getVisibleImages() {
-    return Array.from(galleryItems)
-      .filter(item => !item.classList.contains('hidden'))
-      .map(item => {
-        const img = item.querySelector('img');
-        return img ? img.src : item.dataset.image;
+    });
+    
+    // Remove old event listeners by cloning buttons
+    filterButtons.forEach(btn => {
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+    });
+    
+    // Re-query after cloning
+    const newFilterButtons = document.querySelectorAll('.filter-btn');
+    
+    newFilterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active button
+        newFilterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.dataset.filter;
+        const currentGalleryItems = document.querySelectorAll('.gallery-item');
+        
+        // Filter gallery items with smooth transitions
+        currentGalleryItems.forEach((item, index) => {
+          const category = item.dataset.category;
+          
+          if (filter === 'all' || category === filter) {
+            item.classList.remove('hidden', 'fade-out');
+            item.style.display = 'block';
+            // Stagger the fade-in for smooth effect
+            setTimeout(() => {
+              item.style.animation = `fadeInScale 0.5s ease-out ${index * 0.05}s both`;
+            }, 50);
+          } else {
+            item.classList.add('fade-out');
+            setTimeout(() => {
+              item.classList.add('hidden');
+              item.style.display = 'none';
+            }, 550);
+          }
+        });
       });
+    });
   }
   
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Update active button
-      filterButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      const filter = btn.dataset.filter;
-      
-      // Filter gallery items with smooth transitions
-      galleryItems.forEach((item, index) => {
-        const category = item.dataset.category;
-        
-        if (filter === 'all' || category === filter) {
-          item.classList.remove('hidden', 'fade-out');
-          item.style.display = 'block';
-          // Stagger the fade-in for smooth effect
-          setTimeout(() => {
-            item.style.animation = `fadeInScale 0.5s ease-out ${index * 0.05}s both`;
-          }, 50);
-        } else {
-          item.classList.add('fade-out');
-          setTimeout(() => {
-            item.classList.add('hidden');
-            item.style.display = 'none';
-          }, 550);
+  // Initialize gallery filters on page load
+  initializeGalleryFilters();
+
+  // Initialize lightbox (can be called multiple times after gallery reloads)
+  function initializeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    let currentImageIndex = 0;
+
+    function getVisibleImages() {
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      return Array.from(galleryItems)
+        .filter(item => !item.classList.contains('hidden'))
+        .map(item => {
+          const img = item.querySelector('img');
+          return img ? img.src : item.dataset.image;
+        });
+    }
+
+    function openLightbox() {
+      if (!lightboxImage) return;
+      if (!lightboxImage.src) return;
+      lightboxImage.style.display = 'block';
+      lightbox?.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox?.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function showNextImage() {
+      const images = getVisibleImages();
+      if (images.length === 0) return;
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+      lightboxImage.src = images[currentImageIndex];
+    }
+
+    function showPrevImage() {
+      const images = getVisibleImages();
+      if (images.length === 0) return;
+      currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+      lightboxImage.src = images[currentImageIndex];
+    }
+
+    // Remove old event listeners
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach((item) => {
+      const newItem = item.cloneNode(true);
+      item.parentNode.replaceChild(newItem, item);
+    });
+
+    // Re-query and attach new listeners
+    const newGalleryItems = document.querySelectorAll('.gallery-item');
+    newGalleryItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const images = getVisibleImages();
+        const imgEl = item.querySelector('img');
+        const imageSrc = imgEl ? imgEl.src : item.dataset.image;
+        const index = images.indexOf(imageSrc);
+        if (index !== -1) {
+          currentImageIndex = index;
+          lightboxImage.src = imageSrc;
+          openLightbox();
         }
       });
     });
-  });
 
-  // Lightbox for Gallery Images
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImage = document.getElementById('lightboxImage');
-  const lightboxClose = document.getElementById('lightboxClose');
-  const lightboxPrev = document.getElementById('lightboxPrev');
-  const lightboxNext = document.getElementById('lightboxNext');
-  let currentImageIndex = 0;
+    // Lightbox controls
+    lightboxClose?.addEventListener('click', closeLightbox);
+    lightboxNext?.addEventListener('click', showNextImage);
+    lightboxPrev?.addEventListener('click', showPrevImage);
 
-  function openLightbox() {
-    if (!lightboxImage) return;
-    if (!lightboxImage.src) return;
-    lightboxImage.style.display = 'block';
-    lightbox?.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    lightbox?.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  function showNextImage() {
-    const images = getVisibleImages();
-    currentImageIndex = (currentImageIndex + 1) % images.length;
-    lightboxImage.src = images[currentImageIndex];
-  }
-
-  function showPrevImage() {
-    const images = getVisibleImages();
-    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-    lightboxImage.src = images[currentImageIndex];
-  }
-
-  galleryItems.forEach((item) => {
-    item.addEventListener('click', () => {
-      const images = getVisibleImages();
-      const imgEl = item.querySelector('img');
-      const imageSrc = imgEl ? imgEl.src : item.dataset.image;
-      const index = images.indexOf(imageSrc);
-      if (index !== -1) {
-        currentImageIndex = index;
-        lightboxImage.src = imageSrc;
-        openLightbox();
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
       }
     });
-  });
 
-  lightboxClose?.addEventListener('click', closeLightbox);
-  lightboxNext?.addEventListener('click', showNextImage);
-  lightboxPrev?.addEventListener('click', showPrevImage);
+    // Keyboard navigation for lightbox
+    document.addEventListener('keydown', (e) => {
+      if (lightbox?.classList.contains('active')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') showNextImage();
+        if (e.key === 'ArrowLeft') showPrevImage();
+      }
+    });
+  }
 
-  lightbox?.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-      closeLightbox();
-    }
-  });
+  // Initialize lightbox on page load
+  initializeLightbox();
 
-  // Keyboard navigation for lightbox
-  document.addEventListener('keydown', (e) => {
-    if (lightbox?.classList.contains('active')) {
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowRight') showNextImage();
-      if (e.key === 'ArrowLeft') showPrevImage();
-    }
+  // Try to load gallery from API (optional - falls back to existing HTML)
+  loadGalleryFromAPI().then(() => {
+    // Re-initialize gallery after API images are loaded
+    initializeGalleryFilters();
+    initializeLightbox();
+  }).catch(() => {
+    // If API fails, we already have HTML gallery initialized
+    console.log('Using existing HTML gallery');
   });
 
   // Candle Lighting
