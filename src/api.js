@@ -1,30 +1,8 @@
-// API Configuration
-// Use production Render URL by default, fallback to localhost for development
-const getApiBaseUrl = () => {
-  // If VITE_API_URL is explicitly set, use it
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-  
-  // In development mode (npm run dev), use localhost
-  if (import.meta.env.DEV || import.meta.env.MODE === 'development') {
-    return 'http://localhost:3000/api';
-  }
-  
-  // In production, use Render URL
-  return 'https://josh-backend-0vhk.onrender.com/api';
-};
-
-const API_BASE_URL = getApiBaseUrl();
+// API Configuration – force use of hosted backend
+const API_BASE_URL = 'https://josh-backend-0vhk.onrender.com/api';
 
 // Log API URL for debugging
 console.log('API Base URL:', API_BASE_URL);
-console.log('Environment:', {
-  VITE_API_URL: import.meta.env.VITE_API_URL,
-  DEV: import.meta.env.DEV,
-  MODE: import.meta.env.MODE,
-  PROD: import.meta.env.PROD
-});
 
 /**
  * Fetch all images from the backend API

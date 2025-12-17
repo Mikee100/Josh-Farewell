@@ -78,11 +78,23 @@ function createGalleryItem(image, category) {
   item.className = 'gallery-item';
   item.dataset.category = category;
   item.dataset.image = image.url;
-
-  const img = document.createElement('img');
-  img.src = image.url;
-  img.alt = `${category} Memory ${image.id}`;
-  img.loading = 'lazy';
+  
+  // Create media element based on resource type
+  let mediaEl;
+  if (image.resourceType === 'video') {
+    mediaEl = document.createElement('video');
+    mediaEl.src = image.url;
+    mediaEl.controls = true;
+    mediaEl.preload = 'metadata';
+    // Add a class to secure specific styling if needed
+    mediaEl.className = 'gallery-media';
+  } else {
+    mediaEl = document.createElement('img');
+    mediaEl.src = image.url;
+    mediaEl.alt = `${category} Memory ${image.id}`;
+    mediaEl.loading = 'lazy';
+    mediaEl.className = 'gallery-media';
+  }
 
   const overlay = document.createElement('div');
   overlay.className = 'gallery-overlay';
@@ -96,7 +108,7 @@ function createGalleryItem(image, category) {
   caption.className = 'gallery-caption';
   caption.textContent = image.caption || '';
 
-  item.appendChild(img);
+  item.appendChild(mediaEl);
   item.appendChild(overlay);
   item.appendChild(caption);
 

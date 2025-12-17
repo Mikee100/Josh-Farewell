@@ -1,18 +1,10 @@
-// Import API utilities - always load from API
+// Import API utilities (optional - will fallback to HTML if API unavailable)
 import { loadGalleryFromAPI } from './gallery-loader.js';
 
 // Smooth scroll behavior
 document.addEventListener('DOMContentLoaded', () => {
-  // Always load gallery from API first
-  loadGalleryFromAPI().then(() => {
-    // Initialize gallery filters and lightbox after API images are loaded
-    initializeGalleryFilters();
-    initializeLightbox();
-  }).catch(() => {
-    // If API fails, still initialize for empty state
-    initializeGalleryFilters();
-    initializeLightbox();
-  });
+  // Initialize gallery filters and lightbox first (for HTML fallback)
+  // Then try to load from API and re-initialize if API images are loaded
   // Smooth scroll for any anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
