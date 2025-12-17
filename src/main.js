@@ -35,8 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Observe all sections
   document.querySelectorAll('.section').forEach(section => {
-    section.classList.add('fade-in');
-    observer.observe(section);
+    // Skip fade-in for personal-tributes-section to ensure it's immediately visible
+    if (!section.classList.contains('personal-tributes-section')) {
+      section.classList.add('fade-in');
+      observer.observe(section);
+    } else {
+      // Make personal-tributes-section immediately visible
+      section.style.opacity = '1';
+      section.style.visibility = 'visible';
+    }
   });
 
   // Animate scroll indicator

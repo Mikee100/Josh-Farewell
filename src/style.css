@@ -582,13 +582,42 @@ body {
 
 /* Personal Tributes Section */
 .personal-tributes-section {
+  background: var(--cream); /* Fallback solid color */
   background: linear-gradient(135deg, var(--cream) 0%, var(--light-brown) 100%);
   color: var(--text-dark);
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: var(--spacing-xl) var(--spacing-sm);
+  opacity: 1 !important; /* Ensure section is visible */
+  min-height: 400px; /* Ensure section has height */
+  display: block !important; /* Ensure section is displayed */
+}
+
+@media (min-width: 768px) {
+  .personal-tributes-section {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+}
+
+@media (min-width: 1200px) {
+  .personal-tributes-section {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+}
+
+.personal-tributes-section .section-content {
+  opacity: 1 !important; /* Ensure content is visible */
+  max-width: 100%;
+  width: 100%;
+  padding: 0 var(--spacing-md);
+}
+
+.personal-tributes-section .tributes-container {
+  opacity: 1 !important; /* Ensure container is visible */
 }
 
 .personal-tributes-section .section-title {
   color: var(--text-dark);
+  opacity: 1 !important; /* Ensure title is visible */
+  visibility: visible !important; /* Ensure title is visible */
 }
 
 .personal-tributes-section .section-title::after {
@@ -601,10 +630,13 @@ body {
   color: var(--text-medium);
   margin-bottom: var(--spacing-lg);
   font-style: italic;
+  opacity: 1 !important; /* Ensure intro is visible */
+  visibility: visible !important; /* Ensure intro is visible */
 }
 
 .tributes-container {
-  max-width: 1200px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -619,6 +651,10 @@ body {
   box-shadow: 0 5px 30px var(--shadow-medium);
   border: 1px solid rgba(255, 255, 255, 0.5);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 1 !important; /* Ensure cards are visible */
+  visibility: visible !important; /* Ensure cards are visible */
+  width: 100%;
+  max-width: 100%;
 }
 
 .tribute-card:hover {
@@ -635,6 +671,8 @@ body {
   text-align: center;
   border-bottom: 2px solid var(--accent-color);
   padding-bottom: var(--spacing-sm);
+  opacity: 1 !important; /* Ensure title is visible */
+  visibility: visible !important; /* Ensure title is visible */
 }
 
 .tribute-card-content {
@@ -647,6 +685,8 @@ body {
   margin-bottom: var(--spacing-md);
   text-align: justify;
   color: var(--text-dark);
+  opacity: 1 !important; /* Ensure text is visible */
+  visibility: visible !important; /* Ensure text is visible */
 }
 
 .tribute-paragraph:last-child {
@@ -665,12 +705,27 @@ body {
 
 @media (min-width: 768px) {
   .tributes-container {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr; /* Always single column */
     gap: var(--spacing-xl);
   }
   
   .tribute-card {
     padding: var(--spacing-xl);
+  }
+  
+  .personal-tributes-section .section-content {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1200px) {
+  .tributes-container {
+    grid-template-columns: 1fr; /* Always single column */
+    gap: var(--spacing-xl);
+  }
+  
+  .personal-tributes-section .section-content {
+    padding: 0 var(--spacing-xl);
   }
 }
 
