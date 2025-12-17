@@ -98,11 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         img.addEventListener('error', function() {
           console.error('Image failed to load:', this.src);
         });
-        
-        // Force image to load if lazy loading
-        if (img.hasAttribute('loading') && img.getAttribute('loading') === 'lazy') {
-          img.loading = 'eager';
-        }
       }
     });
     
@@ -131,6 +126,30 @@ document.addEventListener('DOMContentLoaded', () => {
           if (filter === 'all' || category === filter) {
             item.classList.remove('hidden', 'fade-out');
             item.style.display = 'block';
+            item.style.opacity = '1';
+            
+            // Ensure lazy-loaded images start loading when made visible
+            const img = item.querySelector('img[data-src]');
+            if (img) {
+              const currentSrc = img.src || '';
+              if (!currentSrc || currentSrc.includes('data:image/svg')) {
+                // Trigger lazy loading for images that haven't loaded yet
+                const src = img.dataset.src;
+                if (src) {
+                  img.src = src;
+                  img.removeAttribute('data-src');
+                  img.style.opacity = '1';
+                  const placeholder = item.querySelector('.image-placeholder');
+                  if (placeholder) {
+                    img.addEventListener('load', () => {
+                      placeholder.style.opacity = '0';
+                      setTimeout(() => placeholder.remove(), 300);
+                    }, { once: true });
+                  }
+                }
+              }
+            }
+            
             // Stagger the fade-in for smooth effect
             setTimeout(() => {
               item.style.animation = `fadeInScale 0.5s ease-out ${index * 0.05}s both`;
@@ -143,6 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 550);
           }
         });
+        
+        console.log(`Filter applied: ${filter}, Items visible: ${Array.from(currentGalleryItems).filter(item => filter === 'all' || item.dataset.category === filter).length}`);
       });
     });
   }
@@ -164,8 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return Array.from(galleryItems)
         .filter(item => !item.classList.contains('hidden'))
         .map(item => {
-          const img = item.querySelector('img');
-          return img ? img.src : item.dataset.image;
+          // Use lightbox URL if available, otherwise fallback to dataset.image or img src
+          return item.dataset.lightboxUrl || item.dataset.image || (item.querySelector('img')?.src);
         });
     }
 
@@ -208,12 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
     newGalleryItems.forEach((item) => {
       item.addEventListener('click', () => {
         const images = getVisibleImages();
-        const imgEl = item.querySelector('img');
-        const imageSrc = imgEl ? imgEl.src : item.dataset.image;
-        const index = images.indexOf(imageSrc);
+        // Use lightbox URL for full-size view
+        const lightboxUrl = item.dataset.lightboxUrl || item.dataset.image;
+        const index = images.indexOf(lightboxUrl);
         if (index !== -1) {
           currentImageIndex = index;
-          lightboxImage.src = imageSrc;
+          lightboxImage.src = lightboxUrl;
           openLightbox();
         }
       });

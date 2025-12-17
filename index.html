@@ -9,6 +9,9 @@
   <link rel="icon" type="image/jpeg" href="josh_images/WhatsApp Image 2025-12-15 at 7.33.43 AM (1).jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Cloudinary CDN preconnect for faster image loading -->
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="dns-prefetch" href="https://res.cloudinary.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet">
@@ -30,7 +33,7 @@
     <!-- Hero Section -->
     <section class="hero" id="hero">
       <img src="/josh_images/WhatsApp Image 2025-12-15 at 7.33.43 AM (1).jpeg" alt="Joshua Ngumo Kinyingi"
-        class="hero-image-bg">
+        class="hero-image-bg" fetchpriority="high" decoding="async" loading="eager">
       <div class="hero-overlay"></div>
       <div class="dove-sky">
         <div class="dove dove-1">
@@ -142,6 +145,112 @@
             promise he held for the future. Rest in peace, dear Joshua. You will be deeply missed, but never forgotten.
           </p>
           <div class="quote-mark closing">"</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal Tributes Section -->
+    <section class="section personal-tributes-section" id="personal-tributes">
+      <div class="section-content">
+        <h2 class="section-title">Personal Tributes</h2>
+        <p class="tributes-intro">Heartfelt messages from those who knew Joshua best</p>
+        
+        <div class="tributes-container">
+          <!-- First Tribute -->
+          <div class="tribute-card">
+            <h3 class="tribute-card-title">Tribute to Joshua</h3>
+            <div class="tribute-card-content">
+              <p class="tribute-paragraph">
+                Joshua, my light-skin friend. 
+                I remember when you moved to same plot where we'd ride bikes, and that's 
+                where our journey of friendship began. From that moment on, we created 
+                memories that will live with me forever.
+              </p>
+              <p class="tribute-paragraph">
+                I remember us eating mutura with the squad, everyone fighting for the last piece, 
+                and you, in your mature way, saying "sasa ona ulafi" to call out the greed. I 
+                remember how you would load your food with pilipili until we had no choice but 
+                to nickname you "Mhindi", and we'd all laugh. I remember you playing ball with 
+                us, and you were genuinely good at it.
+              </p>
+              <p class="tribute-paragraph">
+                I remember us riding bikes until we were completely worn out. Even in high 
+                school, during the holidays, we kept riding. Sometimes you would simply visit us 
+                and keep us company, and honestly, that alone was more than enough.
+              </p>
+              <p class="tribute-paragraph">
+                Your birthday is on Tuesday next week. Many times you had travelled upcountry, 
+                so we made it a tradition to revisit it on the 31st of December, staying out all 
+                night, just for the plot.
+              </p>
+              <p class="tribute-paragraph">
+                For those of us who knew you closely, we knew you could shika moto at times, 
+                short-tempered, but you always used that fire to defend your friends. We used to 
+                tease you because you'd turn pink when angry, which only made us laugh even 
+                more.
+              </p>
+              <p class="tribute-paragraph">
+                I remember an altercation where you were teasing Patrick about bikes, only for 
+                him to later join Form One and find you there at Murang'a High School. Life really 
+                has a way of crossing paths.
+              </p>
+              <p class="tribute-paragraph">
+                In campus, we made even more memories, going to parks, long walks, swimming. 
+                You were always somewhere near nyama choma, which you loved so much. You 
+                even went out of your way to grill nyama for us on Muchiri's 21st birthday.
+              </p>
+              <p class="tribute-paragraph">
+                We used to play Monopoly, and you were always the accountant, because you 
+                never played favorites. Sometimes we would even be mad at you, but later we'd 
+                laugh about it.
+              </p>
+              <p class="tribute-paragraph">
+                I remember our time as true comrades. When I was struggling financially, you 
+                never hesitated to step in, sometimes in the simplest way, by making sure I had a 
+                meal when things were hard. When you got a job, it became easier for us to 
+                spend meaningful time together, and even then, you would lend us money and 
+                say "na mrudishe," knowing very well we were jobless at the time and couldn't. 
+                You never complained. You were patient with us. And whenever you needed help, 
+                I showed up too, that's how we looked out for each other.
+              </p>
+              <p class="tribute-paragraph">
+                I remember Maureen telling me how they grew up side by side, sharing innocent 
+                laughter, childhood secrets, scraped knees, and dreams that felt bigger than the 
+                world they lived in. She spoke of knowing Joshua before life added weight and 
+                responsibility, and how, even then, he was more than a friend, he was family. And 
+                I know Maureen wishes to carry those childhood memories with her forever, 
+                holding space for him in her heart.
+              </p>
+              <p class="tribute-paragraph">
+                I remember Tiffany telling me how Joshua was a brother from another mother, a 
+                caring neighbor who made everyday life meaningful. They cooked and ate 
+                together, played pool and PlayStation, took walks, talked about CPA, and shared 
+                simple moments that mattered. She said Joshua helped her embrace her 
+                extroverted nature, and they had plans to meet again. And I know Tiffany wishes 
+                to continue to check in on his family and keep that bond alive in the ways she can.
+              </p>
+              <p class="tribute-paragraph tribute-signature">
+                Your seat may be empty, but it will always be reserved for you. 
+                Until we meet again, my boy.
+              </p>
+            </div>
+          </div>
+
+          <!-- Second Tribute -->
+          <div class="tribute-card">
+            <h3 class="tribute-card-title">Dear Josh</h3>
+            <div class="tribute-card-content">
+              <p class="tribute-paragraph">
+                Dear Josh, we mzee, it is still unreal that you had gone. You taught us what brotherhood was, especially during our high school years, and occasionally later on, when we were in various universities and colleges. You were so generous, so humorous and could always say to us how we should always smile no matter what we were going through.
+              </p>
+              <p class="tribute-paragraph">
+                In friendship, faith or on the football field, you led by example you represented what was right, helped people to rise and gave your all. You have given us the importance of family, friendship and God and these lessons will remain in us.
+              </p>
+              <p class="tribute-paragraph tribute-signature">
+                It is painful to say goodbye but we are glad to see that this is not the end. May you go into eternal rest, brother. Till we meet again.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
