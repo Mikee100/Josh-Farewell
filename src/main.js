@@ -75,6 +75,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const filterButtons = document.querySelectorAll('.filter-btn');
   const galleryItems = document.querySelectorAll('.gallery-item');
   
+  // Ensure all gallery items are visible on page load
+  galleryItems.forEach(item => {
+    item.classList.remove('hidden', 'fade-out');
+    item.style.display = 'block';
+    item.style.opacity = '1';
+    
+    // Ensure images load properly
+    const img = item.querySelector('img');
+    if (img) {
+      img.style.display = 'block';
+      img.style.opacity = '1';
+      img.style.visibility = 'visible';
+      
+      // Handle image load errors
+      img.addEventListener('error', function() {
+        console.error('Image failed to load:', this.src);
+      });
+      
+      // Force image to load if lazy loading
+      if (img.hasAttribute('loading') && img.getAttribute('loading') === 'lazy') {
+        img.loading = 'eager';
+      }
+    }
+  });
+  
   // Get all visible images for lightbox
   function getVisibleImages() {
     return Array.from(galleryItems)

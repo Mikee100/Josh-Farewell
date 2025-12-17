@@ -586,6 +586,12 @@ body {
   background: var(--white);
 }
 
+/* Ensure gallery is always visible even if scroll animations fail */
+.gallery-section.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .gallery-intro {
   text-align: center;
   font-size: 1.2rem;
@@ -691,8 +697,11 @@ body {
   width: 100%;
   height: auto;
   display: block;
+  opacity: 1;
+  visibility: visible;
   transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
+  object-fit: cover;
 }
 
 .gallery-overlay {
